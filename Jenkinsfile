@@ -1,17 +1,13 @@
 pipeline{
 
-  // agent any
+  agent any
 
-  agent {
-    any {
-      image 'python:3.12' // or your custom image with python, terraform, etc.
-    }
-  }
 
   environment {
     KOYEB_API_TOKEN = credentials('KOYEB_TOKEN')
     PULUMI_ACCESS_TOKEN = credentials('PULUMI_ACCESS_TOKEN')
   }
+
 
   stages {
 
@@ -20,6 +16,16 @@ pipeline{
       steps{
         dir('pulumi-koyeb') {
           sh '''
+          curl -O https://www.python.org/ftp/python/3.13.3/Python-3.13.3.tar.xz
+          tar -xf Python-3.13.3.tar.xz
+          cd Python-3.13.3
+
+          ./configure --prefix=$HOME/.local/python-3.13 --enable-optimizations
+          make -j$(nproc)
+          make install
+          
+          export PATH=$HOME/.local/python-3.13/bin:$PATH
+
           curl -fsSL https://get.pulumi.com | sh
           mkdir -p ~/.pulumi/plugins/resource-koyeb-v0.1.11
           curl -L https://github.com/koyeb/pulumi-koyeb/releases/download/v0.1.11/pulumi-resource-koyeb-v0.1.11-linux-amd64.tar.gz | tar -xz -C ~/.pulumi/plugins/resource-koyeb-v0.1.11
