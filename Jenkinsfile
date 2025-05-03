@@ -3,21 +3,26 @@ pipeline{
   agent any
 
   environment {
-    KOYEB_API_TOKEN = credentials('KOYEB_API_TOKEN')
+    KOYEB_API_TOKEN = credentials('KOYEB_TOKEN')
+    PULUMI_ACCESS_TOKEN  credetials('PULUMI_ACCESS_TOKEN')
   }
 
   stages {
 
-    stage('Koyeb Setup and Deploy Job'){
+    stage('Pulumi Setup and Deploy Koyeb'){
       steps{
-        // sh 'apt install curl' #Remove comment if curl is not installed on host system
-        sh 'curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh'
-        sh '''
-          export PATH="/var/jenkins_home/.koyeb/bin:$PATH"
-          export KOYEB_TOKEN=$KOYEB_API_TOKEN
-          koyeb app create glowberry-tax-structure-simulator-glabcicd-docker-compose-koyeb
-          koyeb service create glowberry-tax-structure-simulator-glabcicd-docker-compose-koyeb --app glowberry-tax-structure-simulator-glabcicd-docker-compose-koyeb --git github.com/EphraimX/glowberry-global-tax-structure-simulator-gha-docker-compose-koyeb --instance-type free --git-builder docker --git-docker-dockerfile Dockerfile.koyeb --port 3000:http --route /:3000 --privileged
-        '''
+        dir('pulumi-koyeb') {
+          sh '''
+          curl -fsSL https://get.pulumi.com | sh
+          mkdir -p ~/.pulumi/plugins/resource-koyeb-v0.1.11
+          curl -L https://github.com/koyeb/pulumi-koyeb/releases/download/v0.1.11/pulumi-resource-koyeb-v0.1.11-linux-amd64.tar.gz | tar -xz -C ~/.pulumi/plugins/resource-koyeb-v0.1.11
+          export PATH=$HOME/.pulumi/bin:$PATH
+          pulumi login
+          pulumi stack select glowberry-dev-gha-stack || pulumi stack init glowberry-dev-gha-stack
+          pulumi preview
+          pulumi up -y
+          '''
+        }
       }
     }
 

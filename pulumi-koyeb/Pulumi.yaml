@@ -1,0 +1,11 @@
+name: pulumi-koyeb
+description: Infrastructure for Glowberry Tax Simulator
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python
