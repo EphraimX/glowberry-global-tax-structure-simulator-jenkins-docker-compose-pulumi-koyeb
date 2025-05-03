@@ -4,12 +4,13 @@ pipeline{
 
   environment {
     KOYEB_API_TOKEN = credentials('KOYEB_TOKEN')
-    PULUMI_ACCESS_TOKEN  credetials('PULUMI_ACCESS_TOKEN')
+    PULUMI_ACCESS_TOKEN = credetials('PULUMI_ACCESS_TOKEN')
   }
 
   stages {
 
     stage('Pulumi Setup and Deploy Koyeb'){
+
       steps{
         dir('pulumi-koyeb') {
           sh '''
@@ -23,6 +24,7 @@ pipeline{
           pulumi up -y
           '''
         }
+
       }
     }
 
