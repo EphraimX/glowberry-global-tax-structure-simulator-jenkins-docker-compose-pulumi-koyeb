@@ -14,6 +14,9 @@ pipeline{
       steps{
         dir('pulumi-koyeb') {
           sh '''
+          add-apt-repository ppa:deadsnakes/ppa -y
+          apt update
+          apt install python3.12 -y
           curl -fsSL https://get.pulumi.com | sh
           mkdir -p ~/.pulumi/plugins/resource-koyeb-v0.1.11
           curl -L https://github.com/koyeb/pulumi-koyeb/releases/download/v0.1.11/pulumi-resource-koyeb-v0.1.11-linux-amd64.tar.gz | tar -xz -C ~/.pulumi/plugins/resource-koyeb-v0.1.11
