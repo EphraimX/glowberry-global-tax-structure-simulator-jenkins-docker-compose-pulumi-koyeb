@@ -16,8 +16,9 @@ pipeline{
       steps{
         dir('pulumi-koyeb') {
           sh '''
-          curl -O https://www.python.org/ftp/python/3.13.3/Python-3.13.3.tar.xz
-          tar -xf Python-3.13.3.tar.xz
+
+          curl -O https://www.python.org/ftp/python/3.13.3/Python-3.13.3.tgz
+          tar -xzf Python-3.13.3.tgz
           cd Python-3.13.3
 
           ./configure --prefix=$HOME/.local/python-3.13 --enable-optimizations
