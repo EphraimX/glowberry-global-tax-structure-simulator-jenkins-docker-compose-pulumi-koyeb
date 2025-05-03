@@ -4,7 +4,7 @@ pipeline{
 
   environment {
     KOYEB_API_TOKEN = credentials('KOYEB_TOKEN')
-    PULUMI_ACCESS_TOKEN = credetials('PULUMI_ACCESS_TOKEN')
+    PULUMI_ACCESS_TOKEN = credentials('PULUMI_ACCESS_TOKEN')
   }
 
   stages {
