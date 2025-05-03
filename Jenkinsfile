@@ -3,7 +3,7 @@ pipeline{
   // agent any
 
   agent {
-    docker {
+    any {
       image 'python:3.12' // or your custom image with python, terraform, etc.
     }
   }
